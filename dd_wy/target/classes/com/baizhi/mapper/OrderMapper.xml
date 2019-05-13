@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.OrderDao">
+<resultMap type="order" id="aa">
+<id column="oid" property="id"/>
+<result column="order_no" property="order_no"/>
+<result column="total" property="total"/>
+<result column="status" property="status"/>
+<result column="create_date" property="create_date"/>
+<association property="address" javaType="addr">
+<result column="name" property="name"/>
+<result column="local" property="local"/>
+</association>
+
+</resultMap>
+
+  <insert id="add" parameterType="order">
+  insert into dd_order values(#{id},#{order_no},#{total},#{status},#{address_id},#{create_date},#{user_id})
+  </insert>
+  
+  <select id="selectAllOrder" resultMap="aa">
+  select o.id as oid,order_no,total,status,name,local,create_date from (dd_order o left join dd_address a on o.address_id = a.id)
+  </select>
+  <select id="selectById" parameterType="String" resultType="order" >
+  select * from dd_order where id=#{id}
+  </select>
+</mapper>

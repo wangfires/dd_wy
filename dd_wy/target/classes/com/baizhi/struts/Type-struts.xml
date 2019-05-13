@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+
+		
+		
+		
+	<package name="type" extends="struts-default" namespace="/type">
+			<interceptors> 
+			<interceptor name="login" class="com.baizhi.interceptor.AdminLogin">
+			</interceptor>
+			<interceptor-stack name="stack">
+			<interceptor-ref name="login"/>
+			<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="stack"/>
+		<global-results>
+		<result name="login">/back/login.jsp</result>
+		</global-results>
+		<action name="save" class="com.baizhi.action.TypeAction" method="saveType">
+			<result type="redirectAction">showAll</result>
+			<result name="error">/back/category/add-second.jsp</result>
+			<result name="error2">/back/category/add-first.jsp</result>
+		</action>
+		<action name="showAll" class="com.baizhi.action.TypeAction" method="showAll">
+		<result>/back/category/show.jsp</result>
+		</action>
+		
+	<action name="remove" class="com.baizhi.action.TypeAction" method="removeType">
+		<result name="error" type="redirectAction">showAll</result>
+		<result type="redirectAction">showAll</result>
+	</action>
+	
+	<action name="findParent" class="com.baizhi.action.TypeAction" method="findParent">
+	<result>/back/category/add-second.jsp</result>
+	</action>
+	
+	</package>
+	
+
+</struts>

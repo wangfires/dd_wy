@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+
+		
+		
+		
+	<package name="admin" extends="struts-default" namespace="/admin">
+	
+		
+		<action name="login" class="com.baizhi.action.AdminAction" method="login">
+			<result type="redirect">/back/main/main.jsp</result>
+			<result name="error" type="redirect">/back/login.jsp?message=${message}</result>
+		</action>
+	<action name="logout" class="com.baizhi.action.AdminAction" method="logout">
+	<result type="redirect">/back/login.jsp</result>
+	</action>
+	<action name="getImage" class="com.baizhi.action.AdminAction" method="getImage">
+	
+	</action>
+	
+	</package>
+	
+
+</struts>

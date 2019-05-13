@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ItemDao">
+<resultMap type="item" id="aa">
+<id column="id" property="id"/>
+<result column="count" property="count"/>
+<association property="book" javaType="book">
+<result column="name" property="name"/>
+<result column="cover" property="cover"/>
+<result column="price" property="price"/>
+<result column="dprice" property="dprice"/>
+</association>
+</resultMap>
+
+  	<insert id="add" parameterType="item">
+  	insert into dd_item values(#{id},#{order_id},#{book_buyprice},#{book_id},#{count},#{create_date})
+  	</insert>
+ <select id="selectByOrderId" parameterType="String" resultMap="aa">
+ select i.id,b.name ,b.cover,b.price,dd_price as dprice,i.count from (dd_item i left join DD_BOOK b on i.book_id = b.id) where i.order_id = #{orderId}
+ </select>
+  	
+</mapper>

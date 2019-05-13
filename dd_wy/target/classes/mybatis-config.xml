@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+
+
+
+	<!-- 引入properties -->
+	<properties resource="jdbc.properties"/>
+	<!-- 别名配置
+		1.指定类 起别名<typeAlias type="com.baizhi.entity.User" alias="user"/>
+		2.指定包 起别名 <package name="com.baizhi.entity"/> 包下所有类自动起别名  默认起的别名  User  user
+	 -->
+	<typeAliases>
+		<typeAlias type="com.baizhi.entity.Book" alias="book"/>
+		<typeAlias type="com.baizhi.entity.Admin" alias="admin"/>
+		<typeAlias type="com.baizhi.entity.Type" alias="type"/>
+		<typeAlias type="com.baizhi.entity.User" alias="user"/>
+		<typeAlias type="com.baizhi.entity.Address" alias="addr"/>
+		<typeAlias type="com.baizhi.entity.Item" alias="item"/>
+		<typeAlias type="com.baizhi.entity.Order" alias="order"/>
+	</typeAliases>
+	
+	<!-- 连接相关参数 -->
+	<environments default="dev">
+		<environment id="dev">
+			<transactionManager type="JDBC"/>
+			<dataSource type="POOLED">
+				<property name="driver" value="${driver}"/>
+				<property name="url" value="${url}"/>
+				<property name="username" value="${username}"/>
+				<property name="password" value="${password}"/>
+			</dataSource>
+		</environment>
+	</environments>
+	
+	
+	<!-- mapper文件的注册 -->
+	<mappers>
+		<mapper resource="com/baizhi/mapper/BookMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/AdminMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/TypeMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/UserMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/AddressMapper.xml"/>
+		<mapper resource="com/baizhi/mapper/ItemMapper.xml"/>
+			<mapper resource="com/baizhi/mapper/OrderMapper.xml"/>	
+	</mappers>
+
+
+</configuration>

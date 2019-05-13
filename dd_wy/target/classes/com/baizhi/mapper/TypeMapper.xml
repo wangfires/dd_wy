@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.TypeDao">
+<resultMap type="type" id="typeMap">
+<id column="sid" property="id"/>
+<result column="sname" property="name"/>
+<result column="sparentId" property="parentId"/>
+<result column="slevels" property="levels"/>
+	<association property="type" javaType="Type">
+	<id column="fid" property="id"/>
+<result column="fname" property="name"/>
+<result column="fparentId" property="parentId"/>
+<result column="flevels" property="levels"/>
+	</association>
+</resultMap>
+<resultMap type="type" id="aa">
+	<id column="fid" property="id"/>
+	<result column="fname" property="name"/>
+	<result column="fparentId" property="parentId"/>
+	<result column="flevels" property="levels"/>
+<collection property="type1" ofType="type">
+	<id column="sid" property="id"/>
+	<result column="sname" property="name"/>
+	<result column="sparentId" property="parentId"/>
+	<result column="slevels" property="levels"/>
+</collection>
+</resultMap>
+  	
+  	<select id="selectAll" resultMap="typeMap" >
+  		select s.id as sid,
+  		s.name as sname,
+  		s.parent_id as sparentId,
+  		s.levels as slevels,
+  			f.id as fid,
+  			f.name as fname,
+  			f.parent_id as fparentId,
+  			f.levels as flevels 
+  			from  dd_type s left join dd_type f 
+  				on s.parent_id = f.id
+  	</select>
+  <insert id="add" parameterType="type">
+  	insert into dd_type values(#{id},#{name},#{parentId,jdbcType=VARCHAR},#{levels})
+  </insert>
+  <delete id="delete" parameterType="String">
+  delete from dd_type where id=#{id}
+  </delete>
+  <select id="selectById" parameterType="String" resultType="type">
+  select id,name,parent_id as parentId,levels from dd_type where id=#{id}
+  </select>
+  
+  <select id="selectByParentId" parameterType="String" resultType="type">
+  select id,name,parent_id as parentId,levels from dd_type where parent_id =#{parentId}
+  </select>
+  <select id="selectByLevels" parameterType="Integer" resultType="type">
+  	select id,name,parent_id as parentId,levels from dd_type where levels=#{levels}
+  </select>
+  <select id="selectByName" parameterType="String" resultType="type">
+  	select id,name,parent_id as parentId,levels from dd_type where name=#{name}
+  </select>
+  	<select id="selectAllFirst" resultMap="aa">
+  		select f.id as fid,
+  			f.name as fname,
+  			f.parent_id as fparentId,
+  			f.levels as flevels,
+  			s.id as sid,
+  		s.name as sname,
+  		s.parent_id as sparentId,
+  		s.levels as slevels 
+  		from  dd_type s left join dd_type f 
+  				on s.parent_id = f.id where f.levels = 1
+  	</select>
+  	
+  	<select id="selectFirstById" parameterType="String" resultMap="aa">
+  		select * from(
+  		select f.id as fid,
+  			f.name as fname,
+  			f.parent_id as fparentId,
+  			f.levels as flevels,
+  			s.id as sid,
+  		s.name as sname,
+  		s.parent_id as sparentId,
+  		s.levels as slevels 
+  		from  dd_type s left join dd_type f 
+  				on s.parent_id = f.id where f.levels = 1)
+  				where fid=#{id}
+  	</select>
+</mapper>

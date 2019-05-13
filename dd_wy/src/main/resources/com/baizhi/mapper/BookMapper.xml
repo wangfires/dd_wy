@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.BookDao">
+<resultMap type="book" id="bookmap">
+<id column="id" property="id"/>
+<result column="name" property="name"/>
+<result column="press" property="press"/>
+<result column="press_date" property="pressDate"/>
+<result column="author" property="author"/>
+<result column="price" property="price"/>
+<result column="dd_price" property="dprice"/>
+<result column="content_abstract" property="contentAbstract"/>
+<result column="cover" property="cover"/>
+
+
+</resultMap>
+
+	 <insert id="add" parameterType="book">
+		insert into dd_book
+		values(#{id,jdbcType=VARCHAR},#{name,jdbcType=VARCHAR},#{author,jdbcType=VARCHAR},#{price,jdbcType=NUMERIC},#{dprice,jdbcType=NUMERIC},#{press,jdbcType=VARCHAR},
+		#{pressDate,jdbcType=DATE},#{cover,jdbcType=VARCHAR},#{sale,jdbcType=NUMERIC},#{stock,jdbcType=NUMERIC},#{typeId,jdbcType=VARCHAR},#{edition,jdbcType=VARCHAR},#{printDate,jdbcType=DATE},
+		#{impression,jdbcType=VARCHAR},#{isbn,jdbcType=VARCHAR},#{sizes,jdbcType=NUMERIC},#{paper,jdbcType=NUMERIC},#{pack,jdbcType=VARCHAR},#{pageNum,jdbcType=NUMERIC},#{wordNum,jdbcType=NUMERIC},
+		#{editorRecommend,jdbcType=VARCHAR},#{contentAbstract,jdbcType=VARCHAR},#{authorAbstract,jdbcType=VARCHAR},#{director,jdbcType=VARCHAR},#{mediaCommentary,jdbcType=VARCHAR})
+	</insert>
+
+
+	<delete id="delete" parameterType="String">
+		delete from dd_book where id=#{id}
+	</delete>
+
+
+	<update id="update" parameterType="book"> 
+		update dd_book
+		<set>
+			<if test="name!=null and name!=''">name=#{name},</if>
+			<if test="author!=null and author!=''">author=#{author},</if>
+			<if test="price!=null">price=#{price},</if>
+			<if test="dprice!=null">dd_price=#{dprice},</if>
+			<if test= "press!=null and press!=''">press=#{press},</if>
+			<if test="pressDate!=null">press_date=#{pressDate},</if>
+			<if test="cover!=null">cover=#{cover},</if>
+			<if test="sale!=null">sale=#{sale},</if>
+			<if test="stock!=null">stock=#{stock},</if>
+			<if test="typeId!=null">type_id=#{typeId},</if>
+			<if test="edition!=null and edition!=''">edition=#{edition},</if>
+			<if test="printDate!=null">print_date=#{printDate},</if>
+			<if test="impression!=null and impression!=''">impression=#{impression},</if>
+			<if test="isbn!=null and isbn!=''">isbn=#{isbn},</if>
+			<if test="sizes!=null and sizes!=''">sizes=#{sizes},</if>
+			<if test="paper!=null and paper!=''">paper=#{paper},</if>
+			<if test="pack!=null and pack!=''">pack=#{pack},</if>
+			<if test="pageNum!=null ">page_num=#{pageNum},</if>
+			<if test="wordNum!=null ">word_num=#{wordNum},</if>
+			<if test="editorRecommend!=null and editorRecommend!=''">editor_recommend=#{editorRecommend},</if>
+			<if test="contentAbstract!=null and contentAbstract!=''">content_abstract=#{contentAbstract},</if>
+			<if test="authorAbstract!=null and authorAbstract!=''">author_abstract=#{authorAbstract},</if>
+			<if test="director!=null and director!=''">director=#{director},</if>
+			<if test="mediaCommentary!=null and mediaCommentary!=''">media_commentary=#{mediaCommentary}</if>
+		</set>
+		where id=#{id}
+	</update>
+
+
+	<select id="selectAll" resultType="book">
+		select id,name,author,price,dd_price as dprice,press,press_date as pressDate,cover,sale,stock,type_id as typeId,edition,print_date as printDate,impression,isbn,sizes,paper,pack,page_num as pageNum,word_num as wordNum,editor_recommend as editorRecommend,content_abstract as contentAbstract,author_abstract as authorAbstract,director,media_commentary as mediaCommentary from dd_book
+	</select>
+	<select id="selectByLike" parameterType="book" resultType="book">
+		select id,name,author,price,dd_price as dprice,press,press_date as pressDate,cover,sale,stock,type_id as typeId,edition,print_date as printDate,impression,isbn,sizes,paper,pack,page_num as pageNum,word_num as wordNum,editor_recommend as editorRecommend,content_abstract as contentAbstract,author_abstract as authorAbstract,director,media_commentary as mediaCommentary from dd_book
+		<where>
+		<if test="name!=null and name!=''">name like '%'||#{name}||'%'</if>
+		<if test="author!=null and author!=''">author like '%'||#{author}||'%'</if>
+		<if test= "press!=null and press!=''">press like '%'||#{press}||'%'</if>
+		</where>
+		
+	</select>
+	
+<select id="selectById" parameterType="String" resultType="book">
+	select id,name,author,price,dd_price as dprice,press,press_date as pressDate,cover,sale,stock,type_id as typeId,edition,print_date as printDate,impression,isbn,sizes,paper,pack,page_num as pageNum,word_num as wordNum,editor_recommend as editorRecommend,content_abstract as contentAbstract,author_abstract as authorAbstract,director,media_commentary as mediaCommentary from dd_book where id = #{id}
+	</select>
+<select id="selectBySale" resultType="book">
+	select b.id,b.name,b.sale,b.author,b.press,b.press_date as pressDate,b.price,b.dd_price as dprice, b.content_abstract as contentAbstract,b.cover,rownum from(select * from dd_book order by sale desc) b 
+		where rownum between 1 and 8
+</select>
+<select id="selectByCreateDate" resultType="book">
+	select 
+		b.id,b.name,b.sale,b.author,b.press,b.press_date as pressDate,b.price,b.dd_price as dprice, b.content_abstract as contentAbstract,b.cover ,rownum
+	from(select * from dd_book order by press_date desc) b 
+	where rownum between 1 and 8	
+</select>
+
+<select id="selectByNewAndCreateDate" resultType="book">
+	select 
+	b.id,b.name,b.author,b.press,b.press_date as pressDate,b.price,b.dd_price as dprice, b.content_abstract as contentAbstract,b.cover,rownum
+	from(select * from dd_book order by press_date desc,sale desc) b
+	where rownum between 1 and 8
+</select>
+
+<select id="selectByFirst" parameterType="String" resultMap="bookmap">
+	select b.id,b.name,b.author,b.press,b.press_date as pressDate,b.price,b.dd_price as dprice, b.content_abstract as contentAbstract,b.cover
+	from(DD_BOOK b LEFT JOIN DD_TYPE t on b.TYPE_ID = t.id) WHERE t.parent_id = #{id}
+</select>
+<select id="selectBySecond" parameterType="String" resultMap="bookmap">
+select id,name,author,press,press_date as pressDate,price,dd_price as dprice, content_abstract as contentAbstract,cover
+	from dd_book where type_id=#{id}
+</select>
+<select id="count" parameterType="String" resultType="Integer">
+select count(id) 
+	from dd_book where type_id=#{id}
+</select>
+<select id="count1" parameterType="String" resultType="Integer">
+select count(id) from(
+  		select f.id as fid,
+  			f.name as fname,
+  			f.parent_id as fparentId,
+  			f.levels as flevels,
+  			s.id as sid,
+  		s.name as sname,
+  		s.parent_id as sparentId,
+  		s.levels as slevels,b.*
+  		from  dd_type s left join dd_type f 
+  				on s.parent_id = f.id LEFT JOIN DD_BOOK b on b.type_id= s.id )
+  				where fid=#{id}
+</select>
+<select id="findByPage" resultType="book">
+select id,name,author,press,press_date as pressDate,price,dd_price as dprice,cover,content_abstract as contentAbstract 
+from (select b.*,rownum rn from (select * from dd_book where  type_id=#{id}) b ) where  rn>#{begin} and rn&lt;=#{end}
+</select>
+<select id="findByFirstPage" resultType="book">
+select *
+FROM(select a.*,rownum rn from
+(select b.id,b.name,b.author,b.press,b.press_date as pressDate,b.price,
+b.dd_price as dprice,b.cover,b.content_abstract as contentAbstract from DD_BOOK b LEFT JOIN DD_TYPE t on b.TYPE_ID = t.id WHERE t.parent_id =#{id}) a) 
+where rn>#{begin} and rn&lt;=#{end}
+</select>
+
+<update id="updateCount">
+update dd_book set sale =sale+#{count}, stock=stock-#{count}
+where id =#{id}
+</update>
+ <!---->
+</mapper>

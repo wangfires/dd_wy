@@ -1,0 +1,6 @@
+body
+{
+	font-size:12px;
+	margin:0 auto; /*各个元素间边界没有距离*/
+	width:960px;
+}

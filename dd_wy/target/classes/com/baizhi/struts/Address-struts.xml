@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+
+		
+		
+		
+	<package name="address" extends="struts-default" namespace="/address">
+	<interceptors> 
+			<interceptor name="user" class="com.baizhi.interceptor.UserInterceptor">
+			</interceptor>
+			<interceptor-stack name="stack">
+			<interceptor-ref name="user"/>
+			<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="stack"/>
+		<global-results>
+		<result name="login">/front/user/login_form.jsp</result>
+		<result name="active" type="redirectAction">
+		<param name="namespace">/user</param>
+		<param name="actionName">sendEmail</param>
+		</result>
+		<result name="ok">findByUserId</result>
+		</global-results>
+	<action name="findByUserId" class="com.baizhi.action.AddressAction" method="findByUserId">
+	<result >/front/order/address_form.jsp</result>
+	
+	</action>
+	<action name="findById" class="com.baizhi.action.AddressAction" method="findById">
+	<result>/front/order/address_form.jsp</result>
+	</action>	
+		
+	
+	</package>
+	
+
+</struts>

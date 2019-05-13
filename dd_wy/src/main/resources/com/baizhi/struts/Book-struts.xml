@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+
+		
+		
+		
+	<package name="book" extends="struts-default" namespace="/book">
+	<interceptors> 
+			<interceptor name="login" class="com.baizhi.interceptor.AdminLogin">
+			</interceptor>
+			<interceptor-stack name="stack">
+			
+			<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="stack"/>
+		<global-results>
+		<result name="login">/back/login.jsp</result>
+		</global-results>
+	
+	<action name="save" class="com.baizhi.action.BookAction" method="save" >
+	<interceptor-ref name="stack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+	<result type="redirectAction">showAll</result>
+	
+	</action>
+	<action name="showAll" class="com.baizhi.action.BookAction" method="showAll">
+	<interceptor-ref name="stack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+	<result >/back/book/show.jsp</result>
+	</action>
+	<action name="selectType" class="com.baizhi.action.BookAction" method="selectType">
+	<interceptor-ref name="stack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+	<result >/back/book/add.jsp</result>
+	</action>
+	<action name="remove" class="com.baizhi.action.BookAction" method="remove">
+	<interceptor-ref name="stack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+	<result type="redirectAction">showAll</result>
+	</action>
+	<action name="selectById" class="com.baizhi.action.BookAction" method="selectById">
+	<interceptor-ref name="stack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+	<result>/back/book/update.jsp</result>
+	</action>
+	<action name="select" class="com.baizhi.action.BookAction" method="select">
+	<interceptor-ref name="stack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+	<result >/back/book/show.jsp</result>
+	</action>
+	<action name="update" class="com.baizhi.action.BookAction" method="update">
+	<interceptor-ref name="stack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+	<result type="redirectAction">showAll</result>
+	</action>
+	<action name="download" class="com.baizhi.action.BookAction" method="download"></action>
+	<action name="mainPage" class="com.baizhi.action.BookAction" method="mainPage">
+	<result>/front/main/main.jsp</result>
+	</action>
+	<action name="secondPage" class="com.baizhi.action.BookAction" method="secondPage">
+	<result>/front/main/book_list.jsp</result>
+	</action>
+	<action name="detail" class="com.baizhi.action.BookAction" method="detail">
+	<result>/front/main/book_detail.jsp</result>
+	</action>
+	
+	</package>
+	
+
+</struts>

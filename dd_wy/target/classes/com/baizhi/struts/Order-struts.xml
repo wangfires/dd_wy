@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "struts-2.1.7.dtd" >
+<struts>
+
+		
+		
+		
+	<package name="order" extends="struts-default" namespace="/order">
+	<interceptors> 
+			<interceptor name="user" class="com.baizhi.interceptor.UserInterceptor">
+			</interceptor>
+			<interceptor name="login" class="com.baizhi.interceptor.AdminLogin">
+			</interceptor>
+			<interceptor-stack name="stack">
+			<interceptor-ref name="defaultStack"/>
+			</interceptor-stack>
+	</interceptors>
+		<default-interceptor-ref name="stack"/>
+		<global-results>
+		<result name="login">/front/user/login_form.jsp</result>
+		<result name="active" type="redirectAction">
+		<param name="namespace">/user</param>
+		<param name="actionName">sendEmail</param>
+		</result>
+		<result name="ok">findByUserId</result>
+		</global-results>
+		
+		
+	<action name="addOrder" class="com.baizhi.action.OrderAction" method="addOrder">
+	<interceptor-ref name="defaultStack"></interceptor-ref>
+	<interceptor-ref name="user"></interceptor-ref>
+	<result name="error" type="redirectAction">
+	<param name="namespace">/address</param>
+	<param name="actionName">findByUserId</param>
+	</result>
+	<result type="redirect">/front/order/order_ok.jsp</result>
+	</action>
+	<action name="showAll" class="com.baizhi.action.OrderAction" method="showAll">
+	<interceptor-ref name="defaultStack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+	<result >/back/order/show.jsp</result>
+	</action>	
+		<action name="showItem" class="com.baizhi.action.OrderAction" method="showItem">
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+	<interceptor-ref name="login"></interceptor-ref>
+		<result>/back/order/detail.jsp</result>
+		</action>
+	
+	</package>
+	
+
+</struts>
