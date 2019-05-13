@@ -1,0 +1,284 @@
+<!--<!doctype html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+    <!--<meta charset="UTF-8">-->
+    <!--<meta name="viewport"-->
+          <!--content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">-->
+    <!--<meta http-equiv="X-UA-Compatible" content="ie=edge">-->
+    <!--<title>Document</title>-->
+    <!--<link rel="stylesheet" href="../statics/boot/css/bootstrap.min.css">-->
+    <!--<link rel="icon" href="../img/favicon.ico" type="image/x-icon" />-->
+    <!--<link rel="stylesheet" href="../statics/jqgrid/css/trirand/ui.jqgrid-bootstrap.css">-->
+    <!--<link rel="stylesheet" href="../css/common.css" type="text/css">-->
+
+    <!--<link rel="stylesheet" href="../css/login.css" type="text/css">-->
+    <!--<script type="text/javascript" src="../statics/boot/js/jquery-3.3.1.min.js"></script>-->
+    <!--<script src="../statics/boot/js/bootstrap.min.js"></script>-->
+    <!--<script src="../statics/jqgrid/js/trirand/i18n/grid.locale-cn.js"></script>-->
+    <!--<script src="../statics/jqgrid/js/trirand/jquery.jqGrid.min(1).js"></script>-->
+    <script>
+        var des;
+        $(function () {
+            $("#add").click(function () {
+                $("#imghead").attr("class","hidden");
+                $("#f").attr("class","");
+                var editor = UE.getEditor('container');
+                editor.ready(function() {
+                    editor.setContent("");
+                });
+                $("#specialform")[0].reset();
+            })
+            $("#save").click(function () {
+                var formData= new FormData($("#specialform")[0]);
+                $.ajax({
+                    url:"/special/edit",
+                    type:"post",
+                    data:formData,
+                    contentType:false,
+                    processData:false,
+                    success:function (result) {
+                        $("#list").jqGrid().trigger("reloadGrid");
+                        $("#myModal").modal("hide");
+                    }
+                })
+            })
+            $("#list").jqGrid({
+                url:"/special/findByPage",
+                datatype:"json",
+                styleUI : 'Bootstrap',
+                colNames:["ID","专辑名称","专辑分数","专辑作者","播音员","集数","描述","专辑封面","创建时间","状态","操作"],
+                pager:"#pager",
+                autowidth:true,//自适应父容器
+                rowNum:3,
+                editurl:"/clazz/edit",//编辑时的url
+                rownumbers:true,
+                sortname:"age",
+                viewrecords:true,
+                rowList:[2,10,15,20,100],
+                colModel:[
+                    {name:"id",align:"center",hidden:true},
+                    {name:"name",align:"center"},
+                    {name:"score",align:"center",editable:true},
+                    {name:"author",align:"center"},
+                    {name:"teller",align:"center"},
+                    {name:"count",align:"center"},
+                    {name:"des",align:"center"},
+                    {name:"picture",align:"center"},
+                    {name:"createdate",align:"center"},
+                    {name:"status",align:"center"},
+                    {name: "options",formatter:function(value,options,row){
+                            var content =
+                                "<a target='_blank' class='glyphicon glyphicon-search'onclick='se(this)' data-toggle=\"modal\" data-target=\"#myModal\" title='专辑详情'></a>"+
+                                "<a class='glyphicon glyphicon-pencil' style='margin-left: 20px;margin-right: 20px;' onclick='up(this)' data-toggle=\"modal\" data-target=\"#myModal\" title='修改'></a></a>"+
+                                "<a class='glyphicon glyphicon-trash' onclick='de(this)' title='删除'></a> ";
+                            ;
+                            return content;
+                        }}
+
+                ]
+            }).jqGrid("navGrid","#pager",{edit:false,add:false,del:false,search:false,refresh:false});
+        })
+        function up(obj) {
+            var id = $(obj).parent().parent().attr("id");
+            var name =document.getElementById("list").rows[id].cells[2].innerText;
+            var score = document.getElementById("list").rows[id].cells[3].innerText;
+            var author= document.getElementById("list").rows[id].cells[4].innerText;
+            var id1=document.getElementById("list").rows[id].cells[1].innerText;
+            var src=document.getElementById("list").rows[id].cells[8].innerText;
+            var teller= document.getElementById("list").rows[id].cells[5].innerText;
+            var des= document.getElementById("list").rows[id].cells[7].innerHTML;
+            var status= document.getElementById("list").rows[id].cells[10].innerText;
+            console.log(des)
+
+            $("option[value="+status+"]").attr("selected",true).attr("disabled",false);
+            $("#f").attr("class","hidden");
+            $("#specialid").val(id1).attr("disabled",false);
+            $("#name").val(name).attr("disabled",false);
+            $("#author").val(author).attr("disabled",false);
+            $("#teller").val(teller).attr("disabled",false);
+            $("#score").val(score).attr("disabled",false);
+
+             //$("#des").val(des);
+            var editor = UE.getEditor('container');
+            editor.ready(function() {
+                editor.setContent(des);
+            });
+            $("#imghead").attr("class","").attr("src","../special/"+src);
+
+        }
+        function edit(id){
+            //根据rowid获取当前行的方法
+            $("#list").jqGrid('editGridRow', id, {
+                height : 300,
+                reloadAfterSubmit : true
+            });
+        }
+        function se(obj) {
+            var id = $(obj).parent().parent().attr("id");
+            var name =document.getElementById("list").rows[id].cells[2].innerText;
+            var score = document.getElementById("list").rows[id].cells[3].innerText;
+            var author= document.getElementById("list").rows[id].cells[4].innerText;
+            var id1=document.getElementById("list").rows[id].cells[1].innerText;
+            var src=document.getElementById("list").rows[id].cells[8].innerText;
+            var teller= document.getElementById("list").rows[id].cells[5].innerText;
+            var des= document.getElementById("list").rows[id].cells[7].innerHTML;
+            var status= document.getElementById("list").rows[id].cells[10].innerText;
+            console.log(des)
+
+            $("option[value="+status+"]").attr("selected",true).attr("readonly",true);
+            $("#f").attr("class","hidden");
+            $("#specialid").val(id1);
+            $("#name").val(name).attr("disabled",true);
+            $("#author").val(author).attr("disabled",true);
+            $("#teller").val(teller).attr("disabled",true);
+            $("#score").val(score).attr("disabled",true);
+            //$("#des").val(des);
+            var editor = UE.getEditor('container');
+            editor.ready(function() {
+                editor.setContent(des);
+            });
+            $("#imghead").attr("class","").attr("src","../special/"+src);
+        }
+        function del(id) {
+            $("#list").jqGrid('delGridRow', id, {
+                height : 300,
+                reloadAfterSubmit : true
+            });
+
+        }
+        function de(obj) {
+
+            var id = $(obj).parent().parent().attr("id");
+            var id1 = document.getElementById("list").rows[id].cells[1].innerText;
+            $.ajax({
+                url: "/special/del",
+                type: "post",
+                data: {"id": id1},
+                success: function (result) {
+                    $("#list").jqGrid().trigger("reloadGrid");
+
+                }
+            })
+        }
+        function imgChange(obj) {
+//获取点击的文本框
+            $("#imghead").attr("class","");
+            var file =document.getElementById("f");
+            var imgUrl =window.URL.createObjectURL(file.files[0]);
+            var img =document.getElementById('imghead');
+            img.setAttribute('src',imgUrl); // 修改img标签src属性值
+        };
+        var editor = UE.getEditor('container');
+
+    </script>
+<!--</head>-->
+<!--<body>-->
+<div class="container-fluid">
+<div class="col-sm-10">
+    <div class="page-header">
+        <h3>专辑管理</h3>
+    </div>
+    <div class="tab-pane">
+        <ul class="nav nav-tabs">
+            <li  role="presentation" class="active"><a href="#">专辑列表</a></li>
+            <li  role="presentation"><a id="add" data-toggle="modal" data-target="#myModal">专辑添加</a></li>
+
+        </ul>
+    </div>
+
+    <table id="list"></table>
+
+    <div id="pager"></div>
+
+</div>
+<div class="modal fade" id="myModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--模态框标题-->
+            <div class="modal-header">
+                <!--
+                    用来关闭模态框的属性:data-dismiss="modal"
+                -->
+                <button type="button" class="close" data-dismiss="modal" ><span >&times;</span></button>
+                <h4 class="modal-title">编辑专辑信息</h4>
+            </div>
+
+            <!--模态框内容体-->
+            <div class="modal-body">
+
+                <form action="" class="form-horizontal" id="specialform" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">专辑封面</label>
+                        <div class="col-sm-4">
+                            <input type="file" id="f" name="aaa" onchange="imgChange(this);">
+                        </div>
+                        <div class="col-sm-6">
+                            <img id="imghead"src="" width="100" height="80" class="hidden"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="hidden" name="id" id="specialid"/>
+                        <label class="col-sm-2 control-label">专辑名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="name" id="name" placeholder="请输入专辑名称" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label">专辑分数</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="score" id="score" placeholder="请输入专辑分数" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label">专辑作者</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="author" id="author" placeholder="请输入专辑作者" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label">专辑播音</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="teller" id="teller" placeholder="请输入专辑播音" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                    <label class="col-sm-2 control-label">专辑描述</label>
+                    <div class="col-sm-10">
+                        <!--<input type="text" name="des" id="des" placeholder="请输入专辑描述" class="form-control">-->
+                        <script id="container" name="des" type="text/plain">
+            这里写你的初始化内容
+                        </script>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">激活状态</label>
+                        <div class="col-sm-10">
+                            <select id="status" name="status" class="form-control">
+                                <option value="激活">激活</option>
+                                <option value="冻结">冻结</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                </form>
+
+            </div>
+
+            <!--模态页脚-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="save">保存</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!--</body>-->
+<!--</html>-->

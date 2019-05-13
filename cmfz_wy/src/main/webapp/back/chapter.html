@@ -1,0 +1,235 @@
+
+    <script>
+        $(function () {
+            $("#list").jqGrid({
+                url:"/chapter/findByPage",
+                datatype:"json",
+                styleUI : 'Bootstrap',
+                colNames:["ID","章节名称","章节路径","章节大小","章节时长","章节播放数","章节下载数","专辑名","上传时间","操作"],
+                pager:"#pager",
+                autowidth:true,//自适应父容器
+                rowNum:10,
+                rownumbers:true,
+                editurl:"/group/edit",//编辑时的url
+                sortname:"age",
+                viewrecords:true,
+                rowList:[10,15,20,100],
+                colModel:[
+                    {name:"id",align:"center",hidden:true,index:"id"},
+                    {name:"name",align:"center",editable:true},
+                    {name:"audiopath",align:"center"//要求返回值必须是准备好的selecthtml结果
+                    },
+                    {name:"sizes",align:"center",editable:true},
+                    {name:"duration",align:"center",editable:true},
+                    {name:"playcount",align:"center",editable:true},
+                    {name:"downloadcount",align:"center",editable:true},
+                    {name:"special.name",hidden:true,align:"center",editable:true},
+                    {name:"createdate",align:"center",editable:true},
+                    {name: "options",formatter:function(value,options,row){
+
+                            var content =
+                                "<a target='_blank' class='glyphicon glyphicon-play'onclick='se(this)' data-toggle=\"modal\" data-target=\"#myModal1\"></a>"+
+                                 "<a style='margin-right: 25px;margin-left: 25px;' onclick='down(this)' class='glyphicon glyphicon-download-alt'></a>"+
+                                // "<a class='glyphicon glyphicon-download-alt' onclick=\"javascript:down(this)\"></a>"
+
+
+                                "<a class='glyphicon glyphicon-trash' onclick='de(this)'></a> ";
+                            return content;
+                        }}
+                        //href='/chapter/download?name="+row.audiopath+"&id="+row.id+"'
+                ],
+                sortname: 'name',
+                grouping:true,
+                groupingView : {
+                    groupField : ['special.name'],
+                    groupColumnShow : [true],
+                    groupText : ['<b>{0} - {1} Item(s)</b>'],
+                    groupCollapse : true,
+                    groupOrder: ['desc']
+                },
+            }).jqGrid("navGrid","#pager",{edit:false,add:false,del:false,search:false,refresh:false});
+        })
+        $("#add").click(function () {
+            $.ajax({
+                url:"/special/findAll",
+                type:"post",
+                success:function (result) {
+                    for (var i=0;i<result.length;i++){
+                        var option=$("<option/>");
+                        option.val(result[i].id).text(result[i].name);
+                        $("#sel").append(option);
+                    }
+                }
+            })
+        })
+        $("#save").click(function () {
+            var formData= new FormData($("#sf")[0]);
+            $.ajax({
+                url:"/chapter/add",
+                type:"post",
+                data:formData,
+                contentType:false,
+                processData:false,
+                success:function (result) {
+                    $("#list").jqGrid().trigger("reloadGrid");
+                    $("#myModal").modal("hide");
+                }
+            })
+        })
+        function se(obj) {
+
+            var id = $(obj).parent().parent().attr("id");
+            var id1 = document.getElementById("list").rows[id].cells[0].innerText;
+            var picpath = document.getElementById("list").rows[id].cells[2].innerText;
+            console.log(picpath);
+            $("#embed").attr("src","../"+picpath);
+            $.ajax({
+                url:"/chapter/update",
+                type:"post",
+                data:{"id":id1},
+                success:function (result) {
+                    $("#list").jqGrid().trigger("reloadGrid");
+                }
+            })
+
+        }
+        function down(obj) {
+            alert();
+            var id = $(obj).parent().parent().attr("id");
+            var id1 = document.getElementById("list").rows[id].cells[0].innerText;
+            var picpath = document.getElementById("list").rows[id].cells[2].innerText;
+
+
+            location.href = "/chapter/download?id="+id1+"&name="+picpath;
+            $("#list").jqGrid().trigger("reloadGrid");
+            // $.ajax({
+            //     url:"/chapter/download",
+            //     type:"post",
+            //     data:{"id":id1,"name":picpath},
+            //     success:function (result) {
+            //         console.log(result);
+            //         $("#list").jqGrid().trigger("reloadGrid");
+            //     }
+            // })
+        }
+
+
+
+        function de(obj) {
+            var id = $(obj).parent().parent().attr("id");
+            var id1 = document.getElementById("list").rows[id].cells[0].innerText;
+            var picpath = document.getElementById("list").rows[id].cells[2].innerText;
+            console.log(id1);
+            console.log(picpath);
+            $.ajax({
+                url:"/chapter/del",
+                type:"post",
+                data:{"path":picpath,"id":id1},
+                success:function (result) {
+                    $("#list").jqGrid().trigger("reloadGrid");
+                }
+            })
+        }
+        $("#myModal1").on('hidden.bs.modal', function () {
+
+            $("#embed").attr("src","../audio/111.txt");
+
+        })
+    </script>
+</head>
+<body>
+
+
+<div class="container-fluid">
+    <div class="page-header">
+        <h3>章节管理</h3>
+    </div>
+    <div class="tab-pane">
+        <ul class="nav nav-tabs">
+            <li  role="presentation" class="active"><a href="#">章节列表</a></li>
+            <li  role="presentation"><a id="add" data-toggle="modal" data-target="#myModal">章节添加</a></li>
+
+        </ul>
+    </div>
+
+    <table id="list"></table>
+
+    <div id="pager"></div>
+
+</div>
+<div class="modal fade" id="myModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--模态框标题-->
+            <div class="modal-header">
+                <!--
+                    用来关闭模态框的属性:data-dismiss="modal"
+                -->
+                <button type="button" class="close" data-dismiss="modal" ><span >&times;</span></button>
+                <h4 class="modal-title">编辑章节信息</h4>
+            </div>
+
+            <!--模态框内容体-->
+            <div class="modal-body">
+
+                <form id="sf" action="post" enctype="multipart/form-data" class="form-horizontal">
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label">添加章节</label>
+                        <div class="col-sm-10">
+                            <input type="file" name="aaa" id="addcap">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="hidden" name="id"/>
+                        <label class="col-sm-2 control-label">章节名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="name" id="name" placeholder="请输入章节名称" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">所属专辑</label>
+                        <div class="col-sm-10">
+                            <select name="specialid" id="sel" class="form-control">
+
+                            </select>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+            <!--模态页脚-->
+            <div class="modal-footer">
+                <button type="button" id="save" class="btn btn-primary">保存</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="myModal1" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--模态框标题-->
+            <div class="modal-header">
+                <!--
+                    用来关闭模态框的属性:data-dismiss="modal"
+                -->
+                <button type="button" class="close" data-dismiss="modal" ><span >&times;</span></button>
+                <h4 class="modal-title">编辑章节信息</h4>
+            </div>
+
+            <!--模态框内容体-->
+            <div class="modal-body">
+                <embed id="embed" src="" />
+            </div>
+
+            <!--模态页脚-->
+
+        </div>
+    </div>
+</div>
+
+

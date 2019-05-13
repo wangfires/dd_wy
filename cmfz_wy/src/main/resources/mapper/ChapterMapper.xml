@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ChapterMapper">
+    <resultMap id="aa" type="chapter">
+        <id column="cid" property="id"/>
+        <result column="cname" property="name"/>
+        <result property="audiopath" column="audiopath"/>
+        <result column="sizes" property="sizes"/>
+        <result column="duration" property="duration"/>
+        <result column="playcount" property="playcount"/>
+        <result column="downloadcount" property="downloadcount"/>
+        <result column="specialid" property="specialid"/>
+        <result column="ccreatedate" property="createdate"/>
+        <association property="special" javaType="Special">
+            <id column="sid" property="id"/>
+            <result column="sname" property="name"/>
+        </association>
+    </resultMap>
+    <insert id="add" parameterType="chapter">
+        insert into chapter values (#{id},#{name},#{audiopath},#{sizes},#{duration},#{playcount},#{downloadcount},#{createdate},#{specialid})
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete from chapter where id =#{id}
+    </delete>
+    <update id="update" parameterType="chapter">
+        update chapter set name=#{name},audiopath=#{audiopath},sizes=#{sizes},duration=#{duration},playcount=#{playcount},downloadcount=#{downloadcount},specialid=#{specialid},createdata=#{createdate}
+        where id =#{id}
+    </update>
+
+    <select id="findAll" resultMap="aa">
+        select c.id as cid,c.name as cname,audiopath,sizes,duration,playcount,downloadcount,specialid,c.createdate as ccreatedate
+        ,s.id as sid ,s.name as sname
+        from chapter c left join special s on c.specialid = s.id
+        order by specialid
+    </select>
+    <update id="updatedown" parameterType="String">
+        update chapter set downloadcount=downloadcount+1 where id =#{id}
+    </update>
+    <update id="updateplay" parameterType="String">
+        update chapter set playcount=playcount+1 where id =#{id}
+    </update>
+    <select id="findBySpecialid" resultType="chapter">
+        select * from chapter where specialid=#{id}
+    </select>
+
+</mapper>

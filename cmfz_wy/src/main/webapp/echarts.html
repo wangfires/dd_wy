@@ -1,0 +1,42 @@
+
+<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+<div id="main1" style="width: 600px;height:400px;"></div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main1'));
+
+    // 指定图表的配置项和数据
+    myChart.setOption({
+        title: {
+            text: '用户注册信息'
+        },
+        tooltip: {},
+        legend: {
+            data:['用户注册量']
+        },
+        xAxis: {
+            data: ["7天内","14天内","21天内","28天内","35天内"]
+        },
+        yAxis: {},
+        series: [{
+            type: 'bar',
+            data: []
+        }]
+    });
+    // 使用刚指定的配置项和数据显示图表。
+    $.ajax({
+        url:"/user/find",
+        datatype:"json",
+        type:"get",
+        success:function (data) {
+            myChart.setOption({
+                series: [{
+                    // 根据名字对应到相应的系列
+                    name: '用户注册量',
+                    data: data.data
+                }]
+            });
+        }
+    })
+
+</script>

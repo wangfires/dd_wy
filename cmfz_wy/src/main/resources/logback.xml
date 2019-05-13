@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <!--定义项目中日志输出位置-->
+    <appender name="aa" class="ch.qos.logback.core.ConsoleAppender">
+        <!--定义项目的日志输出格式-->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern> [%p] %d{yyyy-MM-dd HH:mm:ss} %m %n</pattern>
+        </layout>
+    </appender>
+
+
+    <!--项目中跟日志控制
+        建议在springboot的项目中使用INFO级别
+    -->
+    <root level="INFO">
+        <appender-ref ref="aa"/>
+    </root>
+
+
+    <!--项目中指定包日志控制  用来展示sql语句-->
+    <logger name="com.baizhi.dao" level="DEBUG"/>
+<!--
+    <logger name="com.baizhi.controller" level="ERROR"/>
+-->
+
+</configuration>

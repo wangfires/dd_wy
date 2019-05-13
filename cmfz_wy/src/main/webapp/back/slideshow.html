@@ -1,0 +1,252 @@
+<script>
+    $(function () {
+        $("#list").jqGrid({
+            url:"/slideshow/findByPage",
+            datatype:"json",
+            styleUI : 'Bootstrap',
+            colNames:["ID","图片名称","图片路径","图片描述","图片状态","上传时间","文件名称","操作"],
+            pager:"#pager",
+            autowidth:true,//自适应父容器
+            rowNum:3,
+            rownumbers:true,
+
+            viewrecords:true,
+            rowList:[2,10,15,20,100],
+            colModel:[
+                {name:"id",align:"center",hidden:true,index:"id"},
+                {name:"title",align:"center",editable:true},
+                {name:"picpath",align:"center"//要求返回值必须是准备好的selecthtml结果
+                },
+                {name:"des",align:"center",editable:true},
+                {name:"status",align:"center",editable:true},
+                {name:"createdate",align:"center",editable:true},
+                {name:"filename",align:"center",editable:true},
+                {name: "options",formatter:function(value,options,row){
+
+                        var content =
+                            "<a target='_blank' class='glyphicon glyphicon-search'onclick='se(this)' data-toggle=\"modal\" data-target=\"#Img\"></a>"+
+                            "<a style='margin-right: 40px;margin-left: 40px;' class='glyphicon glyphicon-pencil' onclick='up(this)' data-toggle=\"modal\" data-target=\"#myModal\"></a>"+
+                            "<a class='glyphicon glyphicon-trash' onclick='de(this)'></a> ";
+                        return content;
+                    }}
+
+            ]
+        }).jqGrid("navGrid","#pager",{edit:false,add:false,del:false,search:false,refresh:false});
+        $("#add").click(function () {
+            $("#imghead").attr("class","hidden");
+             $("#sid").val("");
+             $("#name").attr("class","");
+             $("#title").val("");
+             $("#des").val("");
+             $("option").attr("selected",false);
+
+
+        })
+        $("#save").click(function () {
+            var formData= new FormData($("#sf")[0]);
+            $.ajax({
+                url:"/slideshow/edit",
+                type:"post",
+                data:formData,
+                contentType:false,
+                processData:false,
+                success:function (result) {
+                    $("#list").jqGrid().trigger("reloadGrid");
+                    $("#myModal").modal("hide");
+                }
+            })
+        })
+
+        
+    })
+    function de(obj) {
+
+        var id = $(obj).parent().parent().attr("id");
+        var id1=document.getElementById("list").rows[id].cells[1].innerText;
+        console.log(id1);
+        $.ajax({
+            url:"/slideshow/del",
+            type:"post",
+            data:{"id":id1},
+            success:function (result) {
+                $("#list").jqGrid().trigger("reloadGrid");
+
+            }
+        })
+        //window.location.href = '/slideshow/del?id='+id1;
+    }
+    function se(obj) {
+        var id = $(obj).parent().parent().attr("id");
+        var picpath = document.getElementById("list").rows[id].cells[3].innerText;
+        console.log(picpath);
+        $("#i").attr("src","http://"+picpath);
+    }
+    function up(obj) {
+        var id = $(obj).parent().parent().attr("id");
+        var des =document.getElementById("list").rows[id].cells[4].innerText;
+        var title = document.getElementById("list").rows[id].cells[2].innerText;
+        var status= document.getElementById("list").rows[id].cells[5].innerText;
+        var id1=document.getElementById("list").rows[id].cells[1].innerText;
+        var src =document.getElementById("list").rows[id].cells[3].innerText;
+        console.log(id1);
+
+        $("#name").attr("class","hidden");
+        $("#title").val(title);
+        $("#des").val(des);
+        $("#sid").val(id1);
+        $("option[value="+status+"]").attr("selected",true);
+        $("#imghead").attr("class","").attr("src",".."+src);
+    }
+    function edit(id){
+        //根据rowid获取当前行的方法
+        $("#list").jqGrid('editGridRow', id, {
+            height : 300,
+            reloadAfterSubmit : true
+        });
+
+    }
+    function del(id) {
+        $("#list").jqGrid('delGridRow', id, {
+            height : 300,
+            reloadAfterSubmit : true
+        });
+    }
+    function imgChange(obj) {
+        //获取点击的文本框
+        $("#imghead").attr("class","");
+        var file =document.getElementById("name");
+        var imgUrl =window.URL.createObjectURL(file.files[0]);
+        var img =document.getElementById('imghead');
+        img.setAttribute('src',imgUrl); // 修改img标签src属性值
+    };
+    function upload() {
+        var formData= new FormData($("#sform")[0]);
+        $.ajax({
+            url:"/slideshow/load",
+            type:"post",
+            data:formData,
+            contentType:false,
+            processData:false,
+            success:function (result) {
+                $("#list").jqGrid().trigger("reloadGrid");
+            }
+        })
+    }
+
+</script>
+<div class="container">
+    <div class="page-header">
+        <h3>轮播图管理</h3>
+    </div>
+    <div class="tab-pane">
+        <ul class="nav nav-tabs">
+            <li  role="presentation" class="active"><a href="#">轮播图列表</a></li>
+            <li  role="presentation"><a id="add" data-toggle="modal" data-target="#myModal">轮播图添加</a></li>
+
+        </ul>
+    </div>
+
+    <table id="list"></table>
+
+    <div id="pager"></div>
+    <a class="btn btn-primary" href="/slideshow/export">导出轮播图信息</a>
+    <br>
+    <form id="sform" method="post" enctype="multipart/form-data">
+    <input type="file" name="aaa">
+    <input type="button" onclick="upload()" value="导入"/>
+    </form>
+
+</div>
+<div class="modal fade" id="myModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!--模态框标题-->
+            <div class="modal-header">
+                <!--
+                    用来关闭模态框的属性:data-dismiss="modal"
+                -->
+                <button type="button" class="close" data-dismiss="modal" ><span >&times;</span></button>
+                <h4 class="modal-title">编辑轮播图信息</h4>
+            </div>
+
+            <!--模态框内容体-->
+            <div class="modal-body">
+
+                <form action="/slideshow/edit" method="post" class="form-horizontal" id="sf" enctype="multipart/form-data">
+
+                    <div class="form-group">
+                        <input type="hidden" name="id" id="sid"/>
+                        <label class="col-sm-2 control-label" >请选择图片</label>
+                        <div class="col-sm-4">
+                            <input type="file" name="aaa" id="name" onchange="imgChange(this);">
+
+                        </div>
+                        <div class="col-sm-6">
+                            <img id="imghead"src="" width="100" height="80" class="hidden"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label">图片名称</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="title" id="title" placeholder="请输入当前图片名称" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-sm-2 control-label">图片描述</label>
+                        <div class="col-sm-10">
+                            <textarea type="text" name="des" id="des" placeholder="请输入图片的描述" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">激活状态</label>
+                        <div class="col-sm-10">
+                            <select name="status" class="form-control">
+                                <option  value="激活">激活</option>
+                                <option selected value="冻结">冻结</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                </form>
+
+            </div>
+
+            <!--模态页脚-->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="save">保存</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+        <div class="modal fade" id="Img" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!--模态框标题-->
+                    <div class="modal-header">
+                        <!--
+                            用来关闭模态框的属性:data-dismiss="modal"
+                        -->
+                        <button type="button" class="close" data-dismiss="modal" ><span >&times;</span></button>
+                        <h4 class="modal-title">图片信息</h4>
+                    </div>
+
+                    <!--模态框内容体-->
+                    <div class="modal-body">
+                        <img id="i"/>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+</div>
+

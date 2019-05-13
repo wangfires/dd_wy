@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.UserMapper">
+    <select id="findOneWeek" resultType="Integer">
+        select count(*) from user where DATEDIFF(now(),createdate) &lt; 7;
+    </select>
+    <select id="findTwoWeek" resultType="Integer">
+        select count(*) from user where DATEDIFF(now(),createdate) &lt; 14;
+    </select>
+    <select id="findThreeWeek" resultType="Integer">
+        select count(*) from user where DATEDIFF(now(),createdate) &lt; 21;
+    </select>
+    <select id="findFourWeek" resultType="Integer">
+        select count(*) from user where DATEDIFF(now(),createdate) &lt; 28;
+    </select>
+    <select id="findFiveWeek" resultType="Integer">
+        select count(*) from user where DATEDIFF(now(),createdate) &lt; 32;
+    </select>
+<select id="findBySex" resultType="Fuser">
+    select count(*) as value,u.province as name from (select * from user where sex=#{sex}) u where DATEDIFF(now(),createdate) &lt;60 GROUP BY province;
+</select>
+
+
+</mapper>
