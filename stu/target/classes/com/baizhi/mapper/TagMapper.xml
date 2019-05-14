@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.TagDao">
+  <insert id="add" parameterType="tag">
+      insert into tag values(#{id},#{name},#{type})
+  </insert>
+    <delete id="delete" parameterType="String">
+        delete from tag where id =#{id}
+    </delete>
+    <update id="update" parameterType="tag">
+        update tag set name=#{name},type =#{type} where id =#{id}
+    </update>
+    <select id="findByPage" resultType="tag">
+        select * from tag limit #{start},#{rows}
+    </select>
+    <select id="findTotals" resultType="Integer">
+        select count(id) from tag
+    </select>
+    <select id="findAll" resultType="tag">
+        select * from tag
+    </select>
+    <select id="findByType" resultType="tag" parameterType="String">
+        select * from tag where type =#{type}
+    </select>
+</mapper>

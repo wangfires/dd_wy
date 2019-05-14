@@ -1,0 +1,21 @@
+server:
+  port: 7777
+
+spring:
+  mvc:
+    view:
+      prefix: /    # /代表访问项目中webapp中页面
+      suffix: .jsp
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource  #指定连接池类型
+    driver-class-name: com.mysql.jdbc.Driver        #指定驱动
+    url: jdbc:mysql://localhost:3306/clazz         #指定url
+    username: root                                    #指定用户名
+    password: root                                    #指定密码
+  http:
+    multipart:
+      max-request-size: 209715200
+      max-file-size: 209715200
+mybatis:
+  mapper-locations: classpath:com/baizhi/mapper/*.xml  #指定mapper配置文件位置
+  type-aliases-package: com.baizhi.entity              #指定起别名来的类

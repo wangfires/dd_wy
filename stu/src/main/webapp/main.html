@@ -1,0 +1,258 @@
+
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./statics/boot/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="./statics/jqgrid/css/trirand/ui.jqgrid-bootstrap.css">
+
+    <script src="./statics/boot/js/jquery-3.3.1.min.js"></script>
+    <script src="./statics/boot/js/bootstrap.min.js"></script>
+    <script src="./statics/jqgrid/js/trirand/i18n/grid.locale-cn.js"></script>
+    <script src="./statics/jqgrid/js/trirand/jquery.jqGrid.min.js"></script>
+    <script src="./statics/jqgrid/js/Chart.min.js"></script>
+    <script>
+        $(function () {
+            var ctx = $("#myChart").get(0).getContext("2d");
+            // This will get the first returned node in the jQuery collection.
+
+            var data = {
+                labels: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+                datasets: [
+                    {
+                        label: "My First dataset",
+                        fillColor: "rgba(220,220,220,0.2)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    }]
+            }
+            var myLineChart = new Chart(ctx).Line(data, {
+
+                    ///Boolean - Whether grid lines are shown across the chart
+                    scaleShowGridLines : true,
+
+                    //String - Colour of the grid lines
+                    scaleGridLineColor : "rgba(0,0,0,.05)",
+
+                    //Number - Width of the grid lines
+                    scaleGridLineWidth : 1,
+
+                    //Boolean - Whether to show horizontal lines (except X axis)
+                    scaleShowHorizontalLines: true,
+
+                    //Boolean - Whether to show vertical lines (except Y axis)
+                    scaleShowVerticalLines: true,
+
+                    //Boolean - Whether the line is curved between points
+                    bezierCurve : true,
+
+                    //Number - Tension of the bezier curve between points
+                    bezierCurveTension : 0.4,
+
+                    //Boolean - Whether to show a dot for each point
+                    pointDot : true,
+
+                    //Number - Radius of each point dot in pixels
+                    pointDotRadius : 4,
+
+                    //Number - Pixel width of point dot stroke
+                    pointDotStrokeWidth : 1,
+
+                    //Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+                    pointHitDetectionRadius : 20,
+
+                    //Boolean - Whether to show a stroke for datasets
+                    datasetStroke : true,
+
+                    //Number - Pixel width of dataset stroke
+                    datasetStrokeWidth : 2,
+
+                    //Boolean - Whether to fill the dataset with a colour
+                    datasetFill : true,
+
+                    //String - A legend template
+                    legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
+
+                }
+            );
+            $("#stu").click(function () {
+                $("#aa").load("./stu.html");
+            })
+            $("#group").click(function () {
+                $("#aa").load("./group.html");
+            })
+            $("#clazz").click(function () {
+                $("#aa").load("./clazz.html");
+            })
+            $("#city").click(function () {
+                $("#aa").load("./city.html");
+            })
+            $("#tag").click(function () {
+                $("#aa").load("./tag.html");
+            })
+
+        })
+
+
+    </script>
+</head>
+<body>
+<div class="container-fluid">
+    <nav class="navbar navbar-default ">
+        <div class="container-fluid">
+            <!--导航条标题-->
+            <div class="navbar-header">
+                <a href="" class="navbar-brand">班级管理系统</a>
+            </div>
+            <ul class="nav navbar-nav ">
+                <!--生成链接-->
+
+                <li class="active"><a href="main.html"> <span  class="glyphicon glyphicon-home"></span>前台主页 </a></li>
+                <li class=""><a id="stu"> <span  class="glyphicon glyphicon-user"></span>学生管理 </a></li>
+                <li class=""><a id="group"> <span  class="glyphicon glyphicon-heart"></span>小组管理 </a></li>
+                <li class=""><a id="clazz"> <span  class="glyphicon glyphicon-align-justify"></span>班级管理 </a></li>
+                <li class=""><a id="tag"> <span  class="glyphicon glyphicon-list-alt"></span>标签管理 </a></li>
+                <li class=""><a id="city"> <span  class="glyphicon glyphicon-calendar"></span>城市管理 </a></li>
+            </ul>
+            <ul class="nav navbar-nav pull-right">
+                <li class=""><a> admin <span  class="caret"></span></a></li>
+                <li class=""><a> <span  class="glyphicon glyphicon-off"></span>退出 </a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="row" id="aa">
+        <div class="alert alert-danger alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+            <strong><h4><b>网站程序漏洞，继续修复！</b></h4></strong>
+            <p>当前版本程序（v1.0）存在严重安全问题，容易造成攻击，请<strong><b>立即修复！！！</b></strong></p>
+            <br>
+            <button class="btn btn-danger">立即修复</button> <button class="btn btn-default">稍后修复</button>
+
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">网站数据统计</div>
+                <div class="panel-body ">
+
+                </div>
+
+                <!-- Table -->
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td>统计项目</td>
+                        <td>昨日</td>
+                        <td>今日</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>注册用户</td>
+                        <td>1</td>
+                        <td>20</td>
+                    </tr>
+                    <tr>
+                        <td>注册用户</td>
+                        <td>1</td>
+                        <td>20</td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">本周录入学生统计</div>
+                <div class="canvas-holder panel-body container-fluid">
+                <canvas id="myChart" style="width: 100%;height: 60%"></canvas>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <!-- Default panel contents -->
+                <div class="panel-heading">网友热帖</div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-list-alt"> <a href="">aaaaaaaa</a></span></td>
+
+                        <td ><a href="" class="pull-right">2009/02/02</a></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <thead>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-list-alt"> <a href="">aaaaaaaa</a></span></td>
+
+                        <td ><a href="" class="pull-right">2009/02/02</a></td>
+                    </tr>
+                    <thead>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-list-alt"> <a href="">aaaaaaaa</a></span></td>
+
+                        <td ><a href="" class="pull-right">2009/02/02</a></td>
+                    </tr>
+                    <thead>
+                    <tr>
+                        <td><span class="glyphicon glyphicon-list-alt"> <a href="">aaaaaaaa</a></span></td>
+
+                        <td ><a href="" class="pull-right">2009/02/02</a></td>
+                    </tr>
+                    </tbody>
+
+                </table>
+
+
+
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">系统状态</div>
+                <div class="panel-body">
+                    <p>内存使用率:40%</p>
+                    <div class="progress">
+
+                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                            <span class="sr-only">40% Complete (success)</span>
+                        </div>
+                    </div>
+                    <p>数据库使用率:20%</p>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+                            <span class="sr-only">20% Complete</span>
+                        </div>
+                    </div>
+                    <p>磁盘使用率:60%</p>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
+                            <span class="sr-only">60% Complete (warning)</span>
+                        </div>
+                    </div>
+                    <p>CPU使用率:80%</p>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%">
+                            <span class="sr-only">80% Complete (danger)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

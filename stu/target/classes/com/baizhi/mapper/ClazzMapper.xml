@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.ClazzDao">
+    <resultMap id="aa" type="clazz">
+        <id column="cid" property="id"/>
+        <result column="cname" property="name"/>
+        <result column="createdate" property="createdate"/>
+
+        <result column="tagid" property="tagid"/>
+        <association property="tag" javaType="Tag">
+            <id column="tid" property="id"/>
+            <result column="tname" property="name"/>
+        </association>
+    </resultMap>
+    <insert id="add" parameterType="clazz">
+        insert into clazz values (#{id},#{name},#{createdate},#{tagid})
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete from clazz where id =#{id}
+    </delete>
+    <update id="update" parameterType="clazz">
+        update clazz set name=#{name},createdate=#{createdate} where id =#{id}
+    </update>
+    <select id="findByPage" resultMap="aa">
+        select c.id cid,c.name cname,createdate,tagid,t.id tid,t.name tname from
+        (select * from clazz limit #{start},#{rows}) c left join tag t
+        on c.tagid=t.id
+    </select>
+    <select id="findTotals" resultType="Long">
+        select count(id) from clazz
+    </select>
+    <select id="findAll" resultType="clazz">
+        select * from clazz
+    </select>
+
+</mapper>

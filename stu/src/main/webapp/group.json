@@ -1,0 +1,24 @@
+{
+  "page": "1",
+  "total": "8",
+  "records": "100",
+  "rows": [
+    {
+      "id": "1",
+      "name": "第一组",
+      "number":"10",
+      "createdate":"1008-02-06",
+      "clazzid":"150班",
+      "tagid":"学霸"
+
+    },
+    {
+      "id": "2",
+      "name": "第2组",
+      "number":"10",
+      "createdate":"1008-02-06",
+      "clazzid":"148班",
+      "tagid":"好学"
+    }
+  ]
+}

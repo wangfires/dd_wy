@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+jQuery(grid_selector).jqGrid({
+data: grid_data,	//从后台获取到的grid_data数据
+datatype: "local",
+height: 400,
+colNames:[' ', 'id', '登录账号',  '用户密码', '所属角色', '用户姓名','用户说明'],
+colModel:[
+{name:'myac', index:'', width:80, fixed:true, sortable:false, resize:false,
+formatter:'actions',
+formatoptions:{
+keys:true,
+delOptions:{recreateForm: true, beforeShowForm:beforeDeleteCallback},
+//editformbutton:true, editOptions:{recreateForm: true, beforeShowForm:beforeEditCallback}
+}
+},
+{name:'id', index:'id', width:60, sorttype:"int", editable: true, hidden:true},
+{name:'logincode', index:'logincode', width:60, sortable:false, editable: true, editoptions:{/* readonly:true, */ size:"20", maxlength:"30"}},	//登录账号
+{name:'password', index:'password', edittype:'password', width:60, sortable:false, editable: true, hidden:true, editrules:{edithidden:true}, editoptions:{size:"20",maxlength:"30"}},	//用户密码
+{name:'roleid', index:'roleid', width:60, sortable:false, editable: true, edittype:'select', editoptions:{
+value:getroleid(), //设置所属角色下拉框的内容
+dataEvents: [//给当前控件追加事件处理
+{
+type: 'change',                 //下拉选择的时候
+fn: function (e) {              //触发方法
+//获取当前下拉框的id名字（这是点击编辑按钮时才需要的，因为点击编辑按钮后，schoolName的下拉框会变成1_roleid,其中”1“是行号）
+var itemName = this.id;
+var selectNum = itemName.match(/^\d+/);//（这是点击编辑按钮时才需要的）将id中的数字获取出来
+var roleid = this.value; //获取选中的角色名称
+getUsername(selectNum,roleid); //调用获取角色下对应用户信息data的方法
+}
+}
+]
+}},	//所属角色
+{name:'username', index:'username', width:60, sortable:false, editable:true, edittype:'select', editoptions:{value: {'请选择用户名': '请选择用户名'}}}	//用户名称
+],
+rownumbers: true,
+viewrecords : true,
+rowNum:10,
+rowList:[10,20,30],
+pager : pager_selector,
+altRows: true,
+prmNames:{
+page:"page",
+rows:"rows",
+oper:"oper",
+editoper:"edit",
+addoper:"add",
+deloper:"del",
+},
+multiselect: true,
+multiboxonly: true,
+
+editurl: "user_editUser.do",	//新增、编辑、删除时向此接口提交数据
+caption: "用户管理列表",
+autowidth: true
+});
+
+
+</body>
+</html>

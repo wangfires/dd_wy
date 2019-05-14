@@ -1,0 +1,17 @@
+{
+  "page": "1",
+  "total": "8",
+  "records": "100",
+  "rows": [
+    {
+      "id": "1",
+      "name":"学霸",
+      "type":"stu"
+    },
+    {
+      "id": "2",
+      "name": "大班",
+      "type":"clazz"
+    }
+  ]
+}

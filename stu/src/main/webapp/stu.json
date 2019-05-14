@@ -1,0 +1,45 @@
+{
+    "page": "1",
+    "total": "8",
+    "records": "100",
+    "rows": [
+      {
+        "id": "21",
+        "name": "小三",
+        "age": 23,
+        "sex": "男",
+        "bir": "2012-12-12",
+        "shengxiao": "猪",
+        "star": "射手座",
+        "email": "111@qq.com",
+        "QQ": "123456",
+        "phone": "123456",
+        "address": "云南",
+        "clazzid": "1",
+        "groupid": "1",
+        "cityid": "1",
+        "tagid": "1"
+      },
+      {
+        "id": "21",
+        "name": "小三",
+        "age": 23,
+        "sex": "男",
+        "bir": "2012-12-12",
+        "shengxiao": "猪",
+        "star": "射手座",
+        "email": "111@qq.com",
+        "QQ": "123456",
+        "phone": "123456",
+        "address": "河南",
+        "clazzid": "1",
+        "groupid": "1",
+        "cityid": "1",
+        "tagid": "1"
+      }
+
+    ]
+}
+
+
+

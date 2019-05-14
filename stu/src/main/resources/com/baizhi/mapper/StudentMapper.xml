@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.StudentDao">
+    <resultMap id="aa" type="student">
+        <id column="sid" property="id"/>
+        <result column="sname" property="name"/>
+        <result column="age" property="age"/>
+        <result column="sex" property="sex"/>
+        <result column="bir" property="bir"/>
+        <result property="email" column="email"/>
+        <result column="qq" property="qq"/>
+        <result column="phone" property="phone"/>
+        <result column="addr" property="addr"/>
+        <association property="clazz" javaType="Clazz">
+            <id column="cid" property="id"/>
+            <result column="cname" property="name"/>
+        </association>
+        <association property="group" javaType="Group">
+            <id column="gid" property="id"/>
+            <result column="gname" property="name"/>
+        </association>
+        <association property="city" javaType="City">
+            <id column="c1id" property="id"/>
+            <result column="c1name" property="name"/>
+        </association>
+        <collection property="tags" ofType="Tag">
+            <id column="tid" property="id"/>
+            <result column="tname" property="name"/>
+        </collection>
+    </resultMap>
+<insert id="add" parameterType="student">
+    insert into student values(#{id},#{name},#{age},#{sex},#{bir},#{email},#{qq},#{phone},#{addr},#{clazzid},#{groupid},#{cityid})
+</insert>
+    <delete id="delete" parameterType="String">
+        delete from student where id = #{id}
+    </delete>
+    <update id="update" parameterType="student">
+        update student set name=#{name},age=#{age},sex=#{sex},bir=#{bir},email=#{email},qq=#{qq},phone=#{phone},addr=#{addr},clazzid=#{clazzid},groupid=#{groupid},cityid=#{cityid} where id=#{id}
+
+    </update>
+    <select id="findByPage" resultMap="aa">
+         select s.id sid,s.name sname,age,sex,bir,email,qq,phone,phone,addr,c.id cid,c.name cname,g.id gid,g.name gname,c1.id c1id,c1.name c1name,t.id tid,t.name tname from
+        (select * from student
+        <if test="searchField!=null and searchString!=null">
+        where #{searchField} like concat("%",#{searchString},"%")
+        </if>
+        limit #{start},#{rows})s left join clazz c on s.clazzid= c.id
+        left join group1 g on s.groupid = g.id
+        left join city c1 on s.cityid =c1.id
+        left join ts t1 on s.id=t1.stuid
+        left join tag t on t1.tagid=t.id
+     </select>
+    <select id="findTotals" resultType="Long">
+        select count(id) from student
+    </select>
+    <select id="findByCityid" resultType="Long">
+        select count(id) from student where cityid=#{cityid}
+
+    </select>
+    <select id="findByClazzid" resultType="Long">
+        select count(id) from student where clazzid=#{clazzid}
+
+    </select>
+    <select id="findByGroupid" resultType="Long">
+        select count(id) from student where clazzid=#{clazzid}
+
+    </select>
+    <insert id="addTs" >
+        insert into ts values (#{stuid},#{tagid})
+    </insert>
+
+
+</mapper>
+

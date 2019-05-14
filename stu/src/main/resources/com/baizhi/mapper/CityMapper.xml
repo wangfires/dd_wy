@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.CityDao">
+    <insert id="add" parameterType="city">
+        insert into city values(#{id},#{name},#{createdate})
+    </insert>
+    <delete id="delete" parameterType="String">
+        delete from city where id =#{id}
+    </delete>
+    <update id="update" parameterType="city">
+        update city set name=#{name},createdate=#{createdate} where id =#{id}
+    </update>
+    <select id="findTotals" resultType="Long">
+        select count(id) from city
+    </select>
+    <select id="findByPage" resultType="city">
+        select * from city limit #{start},#{rows}
+    </select>
+    <select id="findAll" resultType="city">
+        select * from city
+    </select>
+
+</mapper>

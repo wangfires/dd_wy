@@ -1,0 +1,158 @@
+<script>
+    function init(){
+        $("#tag1").empty();
+        $.ajax({
+            type:"post",
+            url:"/tag/findAll",
+            success:function (result) {
+                //     <!--<div class="alert alert-danger alert-dismissible pull-left " role="alert">-->
+                // <!--<button type="button" class="close"  onclick="delRow(this);"  aria-label="Close"><span aria-hidden="true"  >&times;</span></button>-->
+                //     <!--<strong>笨笨</strong>-->
+                //     <!--</div>-->
+
+
+                for (var i =0;i<result.length;i++){
+                    var div=$("<div/>");
+                    var button=$("<button/>");
+                    var span=$("<span aria-hidden=\"true\"  >&times;</span>");
+                    var strong=$("<strong/>");
+                    var span1=$("<span/>");
+                    if (result[i].type =="学生") {
+                        div.attr("class","alert alert-success alert-dismissible pull-left").attr("role","alert").attr("style","margin:10px");
+                    }else if (result[i].type =="班级"){
+                        div.attr("class","alert alert-danger alert-dismissible pull-left").attr("role","alert").attr("style","margin:10px");
+                    } else if (result[i].type =="小组"){
+                        div.attr("class","alert alert-info alert-dismissible pull-left").attr("role","alert").attr("style","margin:10px");
+                    }
+
+                    button.attr("type","button").attr("class","close").attr("aria-label","Close").click(function () {
+                        if(confirm("确定要删除吗?")){
+
+                            var id = $(this).next().text()
+                            console.log(id);
+                            $.ajax({
+                                type:"post",
+                                url:"/tag/remove",
+                                data:"id="+id,
+                                success:function (result) {
+                                    init();
+                                }
+                            })
+
+                        }else{
+
+                        }
+                    });
+
+                    span1.attr("style","display:none").text(result[i].id);
+                    strong.text(result[i].name);
+                    button.append(span);
+
+                    div.append(button).append(span1).append(strong);
+                    $("#tag1").append(div);
+
+
+                }
+            }
+        })
+    }
+$(function () {
+
+        init();
+    // function delRow(a){
+    //
+    //     if(confirm("确定要删除吗?")){
+    //
+    //         var id = $(a).next().text()
+    //         console.log(id);
+    //         window.location.href="/tag/remove?id="+result[i].id;
+    //     }else{
+    //
+    //     }
+    // }
+    $("#add").click(function () {
+        var name=$("#exampleInputName2").val();
+        var type =$("#ss").val();
+        $.ajax({
+            type:"post",
+            url:"/tag/add",
+            data:{name:name,type:type},
+            success:function (result) {
+                init();
+            }
+        })
+    })
+
+})
+</script>
+
+<div class="row">
+
+    <div class="col-sm-2">
+        <div class="list-group">
+
+            <a href="#" class="list-group-item active">标签管理</a>
+            <a href="#" class="list-group-item"  data-toggle="modal" data-target="#myModal" >标签添加</a>
+        </div>
+
+    </div>
+    <div class="col-sm-10">
+        <div class="page-header" >
+            <h3>标签管理</h3>
+        </div>
+        <div style="margin-top: 30px;margin-bottom: 20px;" >
+            <form class="form-inline">
+                <div class="form-group" style="width: 100%;">
+                    <div class="col-sm-8">
+                    <input type="text" name="name" style="width: 100%;" class="form-control" id="exampleInputName2" placeholder="请输入标签名">
+                    </div>
+                        <div class="col-sm-2">
+
+                    <select id="ss" name="type" class="form-control" style="width: 100%;">
+
+                        <option value="学生" class="form-control">学生<span class="caret"></span></option>
+                        <option value="班级" class="form-control">班级<span class="caret"></span></option>
+                        <option value="小组" class="form-control">小组<span class="caret"></span></option>
+                    </select>
+                        </div>
+
+                    <div class="col-sm-2">
+                    <a id="add"  type="submit" class="btn btn-primary">添加标签</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="taglist" id="tag1">
+
+            <!--<div class="alert alert-info alert-dismissible pull-left" role="alert">-->
+                <!--<button type="button" class="close"  onclick="delRow(this);"  aria-label="Close"><span aria-hidden="true"  >&times;</span></button>-->
+                <!--<strong>勤劳</strong>-->
+            <!--</div>-->
+
+            <!--<div class="alert alert-info alert-dismissible pull-left" role="alert">-->
+                <!--<button type="button" class="close"  onclick="delRow(this);"  aria-label="Close"><span aria-hidden="true"  >&times;</span></button>-->
+                <!--<strong>任劳任怨</strong>-->
+            <!--</div>-->
+
+            <!--<div class="alert alert-danger alert-dismissible pull-left " role="alert">-->
+                <!--<button type="button" class="close"  onclick="delRow(this);"  aria-label="Close"><span aria-hidden="true"  >&times;</span></button>-->
+                <!--<strong>笨笨</strong>-->
+            <!--</div>-->
+
+                <!--<div class="alert alert-info alert-dismissible pull-left" role="alert">-->
+                    <!--<button type="button" class="close"  onclick="delRow(this);"  aria-label="Close"><span aria-hidden="true" >&times;</span></button>-->
+                    <!--<span style="display:none">${tag.id}</span>-->
+                    <!--<strong>${tag.name}</strong>-->
+                <!--</div>-->
+
+
+        </div>
+
+
+    </div>
+
+
+
+    </div>

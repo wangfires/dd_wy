@@ -1,0 +1,146 @@
+
+    <script>
+        $(function () {
+            $("#list").jqGrid({
+                url:"/group/findByPage",
+                datatype:"json",
+                styleUI : 'Bootstrap',
+                colNames:["ID","名称","人数","创建时间","所属班级","小组标签","操作"],
+                pager:"#pager",
+                autowidth:true,//自适应父容器
+                rowNum:3,
+                rownumbers:true,
+                editurl:"/group/edit",//编辑时的url
+                sortname:"age",
+                viewrecords:true,
+                rowList:[2,10,15,20,100],
+                colModel:[
+                    {name:"id",align:"center",hidden:false,index:"id"},
+                    {name:"name",align:"center",editable:true},
+                    {name:"number",align:"center"//要求返回值必须是准备好的selecthtml结果
+                        },
+                    {name:"createdate",align:"center",editable:true},
+                    {name:"clazzid",editable:true,edittype:"select",editoptions:{
+                            dataUrl:"/clazz/findAll"//要求返回值必须是准备好的selecthtml结果
+                        },
+                        formatter:function(value,options,row){
+
+                            if(row.clazz){
+                                return row.clazz.name;
+                            }
+                            return "";
+                        }
+                    },
+                    {name:"tagid",align:"center",editable:true},
+                    {name: "options",formatter:function(value,options,row){
+
+                            var content =
+                                "<a class='btn btn-primary' onclick=\"javascript:edit('"+row.id+"')\">修改</a>";
+                            return content;
+                        }}
+
+                ]
+            }).jqGrid("navGrid","#pager",{edit:true,add:true,del:true,search:false,refresh:true});
+        })
+        function edit(id){
+            //根据rowid获取当前行的方法
+            $("#list").jqGrid('editGridRow', id, {
+                height : 300,
+                reloadAfterSubmit : true
+            });
+
+        }
+        function del(id) {
+            $("#list").jqGrid('delGridRow', id, {
+                height : 300,
+                reloadAfterSubmit : true
+            });
+        }
+    </script>
+
+    <div class="col-sm-2">
+        <div class="list-group">
+
+            <a href="#" class="list-group-item active">小组管理</a>
+            <a href="#" class="list-group-item"  data-toggle="modal" data-target="#myModal" >小组添加</a>
+        </div>
+
+    </div>
+    <div class="col-sm-10">
+        <div class="page-header">
+            <h3>小组管理</h3>
+        </div>
+        <div class="tab-pane">
+            <ul class="nav nav-tabs">
+                <li  role="presentation" class="active"><a href="#">小组列表</a></li>
+                <li  role="presentation"><a id="add" data-toggle="modal" data-target="#myModal">小组添加</a></li>
+
+            </ul>
+        </div>
+
+        <table id="list"></table>
+
+        <div id="pager"></div>
+
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!--模态框标题-->
+                <div class="modal-header">
+                    <!--
+                        用来关闭模态框的属性:data-dismiss="modal"
+                    -->
+                    <button type="button" class="close" data-dismiss="modal" ><span >&times;</span></button>
+                    <h4 class="modal-title">编辑小组信息</h4>
+                </div>
+
+                <!--模态框内容体-->
+                <div class="modal-body">
+
+                    <form action="" class="form-horizontal">
+
+                        <div class="form-group">
+                            <input type="hidden" name="id"/>
+                            <label class="col-sm-2 control-label">名称</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" id="name" placeholder="请输入小组名称" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-sm-2 control-label">人数</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" id="number" placeholder="请输入当前小组人数" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                            <label class="col-sm-2 control-label">所属班级</label>
+                            <div class="col-sm-10">
+                                <input type="text" name="name" id="clazz" placeholder="请选择小组所属班级" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">激活状态</label>
+                            <div class="col-sm-10">
+                                <select class="form-control">
+                                    <option >激活</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+                <!--模态页脚-->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">保存</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">取消</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
