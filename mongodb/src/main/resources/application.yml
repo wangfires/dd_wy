@@ -1,0 +1,13 @@
+spring:
+  mvc:
+    view:
+      suffix: .jsp
+      prefix: /
+pagehelper:
+  reasonable: true
+  supportMethodsArguments: true
+server:
+  port: 7777
+  jsp-servlet:
+    init-parameters:
+      development: true
